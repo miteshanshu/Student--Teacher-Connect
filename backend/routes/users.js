@@ -35,8 +35,18 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({ message: 'User created successfully', user: savedUser });
   } catch (error) {
-    console.error('Error creating user:', error.message);
-    res.status(500).json({ message: 'Error creating user', error: error.message });
+    console.error('Error creating user:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    res.status(500).json({ 
+      message: 'Error creating user', 
+      error: error.message,
+      errorName: error.name,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
@@ -46,7 +56,13 @@ router.get('/', async (req, res) => {
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching users', error: error.message });
+    console.error('Error fetching users:', error);
+    res.status(500).json({ 
+      message: 'Error fetching users', 
+      error: error.message,
+      errorName: error.name,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
