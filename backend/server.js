@@ -56,9 +56,6 @@ app.get('/', (req, res) => {
   res.send('✅ Backend server is running successfully!');
 });
 
-app.get('/', (req, res) => {
-  res.send('✅ Backend server is running successfully!');
-});
 
 // Health check
 app.get('/api/health', (req, res) => {
