@@ -5,12 +5,22 @@ require('dotenv').config();
 
 const app = express();
 
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'https://student-teacher-connect-omega.vercel.app', //  Vercel frontend
+    'http://localhost:3000', // For local development
+    'http://localhost:3001', // Alternative local port
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200, // For legacy browsers
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
+};
+
 // Middleware
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:5000',
-  process.env.FRONTEND_URL || 'https://student-teacher-connect.vercel.app'
-];
+app.use(cors(corsOptions));
+app.use(express.json());
 
 app.use(cors({
   origin: function(origin, callback) {
