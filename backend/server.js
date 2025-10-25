@@ -8,7 +8,7 @@ const app = express();
 // CORS Configuration
 const corsOptions = {
   origin: [
-    'https://student-teacher-connect-omega.vercel.app', //  Vercel frontend
+    'https://student-teacher-connect-omega.vercel.app', // Vercel frontend
     'http://localhost:3000', // For local development
     'http://localhost:3001', // Alternative local port
   ],
@@ -18,20 +18,19 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
 };
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log('Origin:', req.headers.origin);
+  console.log('User-Agent:', req.headers['user-agent']);
+  if (req.body && Object.keys(req.body).length > 0) {
+    console.log('Body:', JSON.stringify(req.body));
+  }
+  next();
+});
+
 // Middleware
 app.use(cors(corsOptions));
-app.use(express.json());
-
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed'));
-    }
-  },
-  credentials: true
-}));
 app.use(express.json());
 
 // MongoDB Connection
@@ -66,10 +65,25 @@ app.get('/', (req, res) => {
   res.send('✅ Backend server is running successfully!');
 });
 
-
 // Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ message: 'Server is running' });
+});
+
+// Diagnostic endpoint
+app.get('/api/debug', (req, res) => {
+  res.status(200).json({
+    message: 'Debug endpoint working',
+    environment: process.env.NODE_ENV || 'development',
+    mongoUri: process.env.MONGODB_URI ? 'Set' : 'Not set',
+    port: process.env.PORT || 5000,
+    timestamp: new Date().toISOString(),
+    corsOrigins: [
+      'https://student-teacher-connect-omega.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ]
+  });
 });
 
 // 404 handler
