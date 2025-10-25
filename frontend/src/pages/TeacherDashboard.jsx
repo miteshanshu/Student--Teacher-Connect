@@ -16,7 +16,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
   // Fetch all assignments for this teacher
   const fetchAssignments = useCallback(async () => {

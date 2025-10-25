@@ -6,7 +6,22 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5000',
+  process.env.FRONTEND_URL || 'https://student-teacher-connect.vercel.app'
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection
@@ -37,6 +52,9 @@ const assignmentsRoute = require('./routes/assignments');
 
 app.use('/api/users', usersRoute);
 app.use('/api/assignments', assignmentsRoute);
+app.get('/', (req, res) => {
+  res.send('✅ Backend server is running successfully!');
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
