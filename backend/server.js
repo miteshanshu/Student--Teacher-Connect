@@ -38,6 +38,10 @@ const assignmentsRoute = require('./routes/assignments');
 app.use('/api/users', usersRoute);
 app.use('/api/assignments', assignmentsRoute);
 
+app.get('/', (req, res) => {
+  res.send('✅ Backend server is running successfully!');
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ message: 'Server is running' });
